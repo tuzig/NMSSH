@@ -577,4 +577,15 @@
     return NO;
 }
 
+- (BOOL)setModificationTime:(nonnull NSDate *)mtime accessTime:(nonnull NSDate *)atime forPath:(NSString *)path {
+    
+    LIBSSH2_SFTP_ATTRIBUTES atr;
+    atr.flags = LIBSSH2_SFTP_ATTR_ACMODTIME;
+    atr.mtime = mtime.timeIntervalSince1970;
+    atr.atime = atime.timeIntervalSince1970;
+    
+    int ret = libssh2_sftp_setstat(self.sftpSession, path.UTF8String, &atr);
+    return ret == 0;
+}
+
 @end

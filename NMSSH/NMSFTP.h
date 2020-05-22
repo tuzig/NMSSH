@@ -330,4 +330,14 @@
  */
 - (BOOL)filesystemStatsForPath:(nonnull NSString *)path size:(nonnull long long *)size freeSpace:(nonnull long long *)freeSpace;
 
+/**
+ Set modification and access dates for given remote file
+ 
+ @param mtime modification time to set
+ @param atime access time to set
+ @param path remote file path
+ @return Data update success
+ */
+- (BOOL)setModificationTime:(nonnull NSDate *)mtime accessTime:(nonnull NSDate *)atime forPath:(nonnull NSString *)path;
+
 @end
