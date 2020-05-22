@@ -8,7 +8,7 @@
 
 - (BOOL)writeStream:(NSInputStream *)inputStream toSFTPHandle:(LIBSSH2_SFTP_HANDLE *)handle;
 - (BOOL)writeStream:(NSInputStream *)inputStream toSFTPHandle:(LIBSSH2_SFTP_HANDLE *)handle progress:(BOOL (^)(NSUInteger))progress;
-- (BOOL)readContentsAtPath:(NSString *)path toStream:(NSOutputStream *)stream progress:(BOOL (^)(NSUInteger, NSUInteger))progress;
+- (BOOL)readContentsAtPath:(NSString *)path toStream:(NSOutputStream *)stream fromPosition:(long long) pos progress:(BOOL (^)(NSUInteger, NSUInteger))progress;
 @end
 
 @implementation NMSFTP
@@ -237,7 +237,7 @@
 - (NSData *)contentsAtPath:(NSString *)path progress:(BOOL (^)(NSUInteger, NSUInteger))progress {
     NSOutputStream *outputStream = [NSOutputStream outputStreamToMemory];
     
-    BOOL success = [self readContentsAtPath:path toStream:outputStream progress:progress];
+    BOOL success = [self readContentsAtPath:path toStream:outputStream fromPosition:0 progress:progress];
     
     if (success) {
         return [outputStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
@@ -247,14 +247,22 @@
 }
 
 - (BOOL)contentsAtPath:(NSString *)path toStream:(NSOutputStream *)outputStream progress:(BOOL (^)(NSUInteger, NSUInteger))progress {
-    return [self readContentsAtPath:path toStream:outputStream progress:progress];
+    return [self contentsAtPath:path toStream:outputStream fromPosition:0 progress:progress];
 }
 
-- (BOOL)readContentsAtPath:(NSString *)path toStream:(NSOutputStream *)outputStream progress:(BOOL (^)(NSUInteger, NSUInteger))progress {
+- (BOOL)contentsAtPath:(nonnull NSString *)path toStream:(nonnull NSOutputStream *)outputStream fromPosition:(long long)pos progress:(BOOL (^_Nullable)(NSUInteger, NSUInteger))progress {
+    return [self readContentsAtPath:path toStream:outputStream fromPosition:pos progress:progress];
+}
+
+- (BOOL)readContentsAtPath:(NSString *)path toStream:(NSOutputStream *)outputStream fromPosition:(long long)pos progress:(BOOL (^)(NSUInteger, NSUInteger))progress {
     LIBSSH2_SFTP_HANDLE *handle = [self openFileAtPath:path flags:LIBSSH2_FXF_READ mode:0];
     
     if (!handle) {
         return NO;
+    }
+    
+    if (pos) {
+        libssh2_sftp_seek64(handle, pos);
     }
     
     NMSFTPFile *file = [self infoForFileAtPath:path];
@@ -269,7 +277,7 @@
     
     char buffer[self.bufferSize];
     ssize_t rc;
-    NSUInteger got = 0;
+    NSUInteger got = pos;
     while ((rc = libssh2_sftp_read(handle, buffer, (ssize_t)sizeof(buffer))) > 0) {
         NSUInteger remainingBytes = rc;
         NSInteger writeResult;

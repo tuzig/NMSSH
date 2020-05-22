@@ -176,6 +176,19 @@
 - (BOOL)contentsAtPath:(nonnull NSString *)path toStream:(nonnull NSOutputStream *)stream progress:(BOOL (^_Nullable)(NSUInteger, NSUInteger))progress;
 
 /**
+ Refer to contentsAtPath:
+ 
+ This adds the ability to get periodic updates to bytes received and position in a source file starting from which data should be retrieved.
+ 
+ @param path An existing file path
+ @param stream Stream to write bytes to
+ @param pos starting position to read data from
+ @param progress Method called periodically with number of bytes downloaded and total file size. Returns NO to abort.
+ @return File read success
+ */
+- (BOOL)contentsAtPath:(nonnull NSString *)path toStream:(nonnull NSOutputStream *)stream fromPosition:(long long)pos progress:(BOOL (^_Nullable)(NSUInteger, NSUInteger))progress;
+
+/**
  Overwrite the contents of a file
 
  If no file exists, one is created.
