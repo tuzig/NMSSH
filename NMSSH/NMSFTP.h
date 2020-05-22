@@ -320,4 +320,14 @@
  */
 - (BOOL)copyContentsOfPath:(nonnull NSString *)fromPath toFileAtPath:(nonnull NSString *)toPath progress:(BOOL (^_Nullable)(NSUInteger copied, NSUInteger totalBytes))progress;
 
+/**
+ Return file system stats for given path
+ 
+ @param path Path to retrive filesystem stats for
+ @param size a pointer to 64-bit integer where total size of filesystem in bytes is to be returned
+ @param freeSpace a pointer to 64-bit integer where free space of filesystem in bytes is to be returned
+ @return YES - when data was retrieved, NO - on error and when path, size or freeSpace are NULL
+ */
+- (BOOL)filesystemStatsForPath:(nonnull NSString *)path size:(nonnull long long *)size freeSpace:(nonnull long long *)freeSpace;
+
 @end
