@@ -340,4 +340,11 @@
  */
 - (BOOL)setModificationTime:(nonnull NSDate *)mtime accessTime:(nonnull NSDate *)atime forPath:(nonnull NSString *)path;
 
+/**
+ Retrieved effective target (with symlinks and relations resolved) for given remote path
+ 
+ @param path remote item path
+ @return resolved path or nil is case of any error
+ */
+- (nullable NSString *)effectiveTargetForPath:(nonnull NSString *)path;
 @end
