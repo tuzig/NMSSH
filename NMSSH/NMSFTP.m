@@ -555,4 +555,18 @@
     return YES;
 }
 
+- (BOOL)filesystemStatsForPath:(NSString *)path size:(long long *)size freeSpace:(long long *)freeSpace {
+    
+    if (!size || !freeSpace || path == nil) return NO;
+    
+    LIBSSH2_SFTP_STATVFS st;
+    int ret = libssh2_sftp_statvfs(self.sftpSession, path.UTF8String, strlen(path.UTF8String), &st);
+    if (!ret) {
+        *size = st.f_frsize * st.f_blocks;
+        *freeSpace = st.f_bavail * st.f_frsize;
+        return YES;
+    }
+    return NO;
+}
+
 @end
