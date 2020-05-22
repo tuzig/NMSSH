@@ -588,4 +588,18 @@
     return ret == 0;
 }
 
+- (nullable NSString *)effectiveTargetForPath:(nonnull NSString *)path {
+    
+    char buffer[512];
+    
+    int rc = libssh2_sftp_realpath(self.sftpSession,
+                                   [path UTF8String],
+                                   buffer, sizeof(buffer));
+    if (rc > 0) {
+        return [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding];
+    } else {
+        return nil;
+    }
+}
+
 @end
