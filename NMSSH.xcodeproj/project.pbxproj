@@ -596,7 +596,7 @@
 					"$(SRCROOT)/NMSSH-OSX/Libraries/lib",
 					"$(PROJECT_DIR)/NMSSH-OSX/Libraries/lib",
 				);
-				MARKETING_VERSION = 2.3.1.R3;
+				MARKETING_VERSION = 2.3.1.R4;
 				PRODUCT_BUNDLE_IDENTIFIER = "se.ninemuses.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
@@ -621,7 +621,7 @@
 					"$(SRCROOT)/NMSSH-OSX/Libraries/lib",
 					"$(PROJECT_DIR)/NMSSH-OSX/Libraries/lib",
 				);
-				MARKETING_VERSION = 2.3.1.R3;
+				MARKETING_VERSION = 2.3.1.R4;
 				PRODUCT_BUNDLE_IDENTIFIER = "se.ninemuses.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
