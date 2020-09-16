@@ -119,6 +119,11 @@
 }
 
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path {
+    return [self contentsOfDirectoryAtPath:path maxItems:0];
+}
+
+- (NSArray *)contentsOfDirectoryAtPath:(NSString *)path maxItems:(NSUInteger)maxItems {
+
     LIBSSH2_SFTP_HANDLE *handle = [self openDirectoryAtPath:path];
 
     if (!handle) {
@@ -146,6 +151,9 @@
                 NMSFTPFile *file = [[NMSFTPFile alloc] initWithFilename:fileName];
                 [file populateValuesFromSFTPAttributes:fileAttributes];
                 [contents addObject:file];
+                if (contents.count == maxItems) {  // Note that 0 removed this limit
+                    break;
+                }
             }
         }
     } while (rc > 0);

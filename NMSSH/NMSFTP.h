@@ -103,6 +103,15 @@
  */
 - (nullable NSArray<NMSFTPFile *> *)contentsOfDirectoryAtPath:(nonnull NSString *)path;
 
+/**
+ Get a list of files for a directory path
+
+ @param path Existing directory to list items from
+ @param maxItems Max number of items to return in the list
+ @returns List of relative paths
+ */
+- (nullable NSArray<NMSFTPFile *> *)contentsOfDirectoryAtPath:(nonnull NSString *)path maxItems:(NSUInteger)maxItems;
+
 /// ----------------------------------------------------------------------------
 /// @name Manipulate symlinks and files
 /// ----------------------------------------------------------------------------
