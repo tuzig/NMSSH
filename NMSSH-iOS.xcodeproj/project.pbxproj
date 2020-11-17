@@ -367,7 +367,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = NMSSH;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = "Nine Muses AB";
 				TargetAttributes = {
 					186CC9571B69110500F674C4 = {
