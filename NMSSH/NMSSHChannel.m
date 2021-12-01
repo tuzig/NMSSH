@@ -228,8 +228,10 @@
                 [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding]];
             }
 
+            int exitCode = libssh2_channel_get_exit_status(self.channel);
+            
             // Store all errors that might occur
-            if (libssh2_channel_get_exit_status(self.channel)) {
+            if (exitCode) {
                 if (error) {
                     ssize_t erc = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer));
 
@@ -240,6 +242,7 @@
 
                     [userInfo setObject:desc forKey:NSLocalizedDescriptionKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
+                    [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
 
                     *error = [NSError errorWithDomain:@"NMSSH"
                                                  code:NMSSHChannelExecutionError
