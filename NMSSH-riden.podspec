@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "NMSSH-riden"
-  spec.version      = "2.4.0"
+  spec.version      = "2.4.1"
   spec.summary      = "NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps libssh2."
   spec.homepage     = "https://github.com/ridenui/NMSSH"
   spec.license      = 'MIT'
