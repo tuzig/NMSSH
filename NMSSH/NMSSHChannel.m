@@ -175,7 +175,7 @@
     return [self execute:command error:error timeout:@0];
 }
 
-- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error timeout:(NSNumber *)timeout {
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stderr: (NSMutableString *__autoreleasing *)stderr timeout:(NSNumber *)timeout {
     NMSSHLogInfo(@"Exec command %@", command);
 
     // In case of error...
@@ -218,14 +218,21 @@
     NSMutableString *response = [[NSMutableString alloc] init];
     for (;;) {
         ssize_t rc;
+        ssize_t erc;
         char buffer[self.bufferSize];
         char errorBuffer[self.bufferSize];
 
         do {
             rc = libssh2_channel_read(self.channel, buffer, (ssize_t)sizeof(buffer));
+            
+            erc = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer));
 
             if (rc > 0) {
                 [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding]];
+            }
+            
+            if (erc > 0) {
+                [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
             }
 
             int exitCode = libssh2_channel_get_exit_status(self.channel);
@@ -233,14 +240,11 @@
             // Store all errors that might occur
             if (exitCode) {
                 if (error) {
-                    ssize_t erc = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer));
-
-                    NSString *desc = [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding];
-                    if (!desc) {
-                        desc = @"An unspecified error occurred";
+                    if (!*stderr) {
+                        *stderr = [[NSMutableString alloc] initWithString: @"An unspecified error occurred"];
                     }
 
-                    [userInfo setObject:desc forKey:NSLocalizedDescriptionKey];
+                    [userInfo setObject:*stderr forKey:NSLocalizedDescriptionKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
 
@@ -253,6 +257,9 @@
             if (libssh2_channel_eof(self.channel) == 1 || rc == 0) {
                 while ((rc  = libssh2_channel_read(self.channel, buffer, (ssize_t)sizeof(buffer))) > 0) {
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
+                }
+                while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
+                    [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
                 [self setLastResponse:[response copy]];
@@ -275,6 +282,9 @@
 
                 while ((rc  = libssh2_channel_read(self.channel, buffer, (ssize_t)sizeof(buffer))) > 0) {
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
+                }
+                while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
+                    [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
                 [self setLastResponse:[response copy]];
@@ -303,6 +313,11 @@
     [self closeChannel];
 
     return nil;
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error timeout:(NSNumber *)timeout {
+    NSMutableString *stderr = [[NSMutableString alloc] init];
+    return [self execute:command error:error stderr:&stderr timeout:@0];
 }
 
 // -----------------------------------------------------------------------------
