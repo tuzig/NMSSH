@@ -166,6 +166,11 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
 - (void)closeShell;
 
 /**
+ Close this channel.
+ */
+- (void)closeChannel;
+
+/**
  Write a command on the remote shell.
 
  If an error occurs or the connection timed out, it will return NO and populate the error object.
