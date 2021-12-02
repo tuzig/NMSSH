@@ -175,7 +175,11 @@
     return [self execute:command error:error timeout:@0];
 }
 
-- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stderr_out: (NSMutableString **)stderr_out timeout:(NSNumber *)timeout {
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out {
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out timeout:@1];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out timeout:(NSNumber *)timeout {
     NMSSHLogInfo(@"Exec command %@", command);
 
     // In case of error...
@@ -213,9 +217,10 @@
 
     // Set the timeout for blocking session
     CFAbsoluteTime time = CFAbsoluteTimeGetCurrent() + [timeout doubleValue];
-
-    // Fetch response from output buffer
+    
     NSMutableString *response = [[NSMutableString alloc] init];
+    NSMutableString *response_stderr = [[NSMutableString alloc] init];
+
     for (;;) {
         ssize_t rc;
         ssize_t erc;
@@ -232,7 +237,7 @@
             }
             
             if (erc > 0) {
-                [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
+                [response_stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
             }
 
             int exitCode = libssh2_channel_get_exit_status(self.channel);
@@ -240,11 +245,8 @@
             // Store all errors that might occur
             if (exitCode) {
                 if (error) {
-                    if (!*stderr_out) {
-                        *stderr_out = [[NSMutableString alloc] initWithString: @"An unspecified error occurred"];
-                    }
-
-                    [userInfo setObject:*stderr_out forKey:NSLocalizedDescriptionKey];
+                
+                    [userInfo setObject:[response_stderr copy] forKey:NSLocalizedDescriptionKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
 
@@ -259,9 +261,12 @@
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
                 }
                 while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
-                    [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
+                    [response_stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
+                *stdout_out = [response copy];
+                *stderr_out = [response_stderr copy];
+                
                 [self setLastResponse:[response copy]];
                 [self closeChannel];
 
@@ -284,9 +289,12 @@
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
                 }
                 while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
-                    [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
+                    [response_stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
+                *stdout_out = [response copy];
+                *stderr_out = [response_stderr copy];
+                
                 [self setLastResponse:[response copy]];
                 [self closeChannel];
 
@@ -316,8 +324,9 @@
 }
 
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error timeout:(NSNumber *)timeout {
-    NSMutableString *stderr_out = [[NSMutableString alloc] init];
-    return [self execute:command error:error stderr_out:&stderr_out timeout:@0];
+    NSString *response_stdout = [NSString alloc];
+    NSString *response_stderr = [NSString alloc];
+    return [self execute:command error:error stdout_out:&response_stdout stderr_out:&response_stderr timeout:@0];
 }
 
 // -----------------------------------------------------------------------------
