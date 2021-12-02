@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
  @param timeout The time to wait (in seconds) before giving up on the request
  @returns Shell command response
  */
-- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stderr:(NSMutableString * _Nullable * _Nullable)stderr timeout:(nonnull NSNumber *)timeout;
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stderr_out:(NSMutableString * _Nullable * _Nullable)stderr_out timeout:(nonnull NSNumber *)timeout;
 
 /// ----------------------------------------------------------------------------
 /// @name Remote shell session

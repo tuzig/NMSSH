@@ -175,7 +175,7 @@
     return [self execute:command error:error timeout:@0];
 }
 
-- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stderr: (NSMutableString *__autoreleasing *)stderr timeout:(NSNumber *)timeout {
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stderr_out: (NSMutableString **)stderr_out timeout:(NSNumber *)timeout {
     NMSSHLogInfo(@"Exec command %@", command);
 
     // In case of error...
@@ -232,7 +232,7 @@
             }
             
             if (erc > 0) {
-                [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
+                [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
             }
 
             int exitCode = libssh2_channel_get_exit_status(self.channel);
@@ -240,11 +240,11 @@
             // Store all errors that might occur
             if (exitCode) {
                 if (error) {
-                    if (!*stderr) {
-                        *stderr = [[NSMutableString alloc] initWithString: @"An unspecified error occurred"];
+                    if (!*stderr_out) {
+                        *stderr_out = [[NSMutableString alloc] initWithString: @"An unspecified error occurred"];
                     }
 
-                    [userInfo setObject:*stderr forKey:NSLocalizedDescriptionKey];
+                    [userInfo setObject:*stderr_out forKey:NSLocalizedDescriptionKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
 
@@ -259,7 +259,7 @@
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
                 }
                 while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
-                    [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
+                    [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
                 [self setLastResponse:[response copy]];
@@ -284,7 +284,7 @@
                     [response appendFormat:@"%@", [[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding] ];
                 }
                 while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
-                    [*stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
+                    [*stderr_out appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding] ];
                 }
 
                 [self setLastResponse:[response copy]];
@@ -316,8 +316,8 @@
 }
 
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error timeout:(NSNumber *)timeout {
-    NSMutableString *stderr = [[NSMutableString alloc] init];
-    return [self execute:command error:error stderr:&stderr timeout:@0];
+    NSMutableString *stderr_out = [[NSMutableString alloc] init];
+    return [self execute:command error:error stderr_out:&stderr_out timeout:@0];
 }
 
 // -----------------------------------------------------------------------------
