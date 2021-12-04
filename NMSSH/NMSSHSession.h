@@ -43,7 +43,9 @@ typedef NS_ENUM(NSInteger, NMSSHKnownHostStatus) {
  If you want to use multiple NMSSHSession instances at once you should implement
  the [crypto mutex callbacks](http://trac.libssh2.org/wiki/MultiThreading).
  */
-@interface NMSSHSession : NSObject
+@interface NMSSHSession : NSObject {
+    @public pthread_mutex_t wrapperLock;
+}
 
 /// ----------------------------------------------------------------------------
 /// @name Setting the Delegate
@@ -68,8 +70,6 @@ typedef NS_ENUM(NSInteger, NMSSHKnownHostStatus) {
 /// ----------------------------------------------------------------------------
 
 - (nonnull instancetype)init NS_UNAVAILABLE;
-
-@property (nonatomic, nonnull, readonly) pthread_mutex_t *wrapperLock;
 
 /**
  Shorthand method for initializing a NMSSHSession object and calling connect.

@@ -10,7 +10,6 @@
 @property (nonatomic, readwrite, getter = isConnected) BOOL connected;
 @property (nonatomic, strong) NSString *host;
 @property (nonatomic, strong) NSString *username;
-@property (nonatomic) pthread_mutex_t *wrapperLock;
 
 @property (nonatomic, copy) NSString *(^kbAuthenticationBlock)(NSString *);
 
@@ -22,6 +21,7 @@
 @end
 
 @implementation NMSSHSession
+
 
 // -----------------------------------------------------------------------------
 #pragma mark - INITIALIZE A NEW SSH SESSION
@@ -46,7 +46,7 @@
 
 - (instancetype)initWithHost:(NSString *)host port:(NSInteger)port andUsername:(NSString *)username {
     if ((self = [super init])) {
-        pthread_mutex_init(self->_wrapperLock, NULL);
+        pthread_mutex_init(&self->wrapperLock, NULL);
         [self setHost:host];
         [self setPort:@(port)];
         [self setUsername:username];
@@ -109,6 +109,7 @@
     if (self.sessionToFree) {
         libssh2_session_free(self.sessionToFree);
     }
+    pthread_mutex_destroy(&self->wrapperLock);
 }
 
 // -----------------------------------------------------------------------------
