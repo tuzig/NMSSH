@@ -22,6 +22,8 @@
 
 @implementation NMSSHSession
 
+@synthesize wrapperLock;
+
 // -----------------------------------------------------------------------------
 #pragma mark - INITIALIZE A NEW SSH SESSION
 // -----------------------------------------------------------------------------
@@ -45,6 +47,7 @@
 
 - (instancetype)initWithHost:(NSString *)host port:(NSInteger)port andUsername:(NSString *)username {
     if ((self = [super init])) {
+        pthread_mutex_init(&self->wrapperLock, NULL);
         [self setHost:host];
         [self setPort:@(port)];
         [self setUsername:username];

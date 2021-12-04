@@ -1,5 +1,6 @@
 #import "NMSSH.h"
 #import "NMSSHChannelStream.h"
+#import <pthread/pthread.h>
 
 @class NMSSHSession;
 @protocol NMSSHChannelDelegate;
@@ -39,6 +40,8 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
 
 /** A valid NMSSHSession instance */
 @property (nonatomic, nonnull, readonly) NMSSHSession *session;
+
+@property (nonatomic, getter = getWrapperLock, readonly) pthread_mutex_t wrapperLock;
 
 /** Size of the buffers used by the channel, defaults to 0x4000 */
 @property (nonatomic, assign) NSUInteger bufferSize;

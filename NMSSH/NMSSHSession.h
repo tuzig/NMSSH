@@ -1,4 +1,5 @@
 #import "NMSSH.h"
+#import <pthread/pthread.h>
 
 @class NMSSHHostConfig, NMSFTP;
 @protocol NMSSHSessionDelegate;
@@ -61,6 +62,8 @@ typedef NS_ENUM(NSInteger, NMSSHKnownHostStatus) {
  only set if NMSSHSession was initialized with a config chain.
  */
 @property (nonatomic, nullable, readonly) NMSSHHostConfig *hostConfig;
+
+@property (readonly) pthread_mutex_t wrapperLock;
 
 /// ----------------------------------------------------------------------------
 /// @name Initialize a new SSH session
