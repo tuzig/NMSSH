@@ -21,7 +21,7 @@
 @synthesize wrapperLock;
 
 - (pthread_mutex_t)getWrapperLock {
-    return self.session.wrapperLock;
+    return *self.session.wrapperLock;
 }
 
 // -----------------------------------------------------------------------------

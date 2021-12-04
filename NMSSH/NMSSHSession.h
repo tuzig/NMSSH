@@ -63,13 +63,13 @@ typedef NS_ENUM(NSInteger, NMSSHKnownHostStatus) {
  */
 @property (nonatomic, nullable, readonly) NMSSHHostConfig *hostConfig;
 
-@property (readonly) pthread_mutex_t wrapperLock;
-
 /// ----------------------------------------------------------------------------
 /// @name Initialize a new SSH session
 /// ----------------------------------------------------------------------------
 
 - (nonnull instancetype)init NS_UNAVAILABLE;
+
+@property (nonatomic, nonnull, readonly) pthread_mutex_t *wrapperLock;
 
 /**
  Shorthand method for initializing a NMSSHSession object and calling connect.
