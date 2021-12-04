@@ -171,6 +171,125 @@
     return "vanilla";
 }
 
+- (void)executeStream:(NSString *)command channelStream: (NMSSHChannelStream*)channelStream {
+    NMSSHLogInfo(@"Exec command stream %@", command);
+    
+    // In case of error...
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:command forKey:@"command"];
+    
+    NSError *__autoreleasing error;
+    
+    if (![self openChannel:&error]) {
+        [[channelStream delegate] onError:error];
+        [[channelStream delegate] onExit:@1];
+        return;
+    }
+
+    [self setLastResponse:nil];
+
+    int rc = 0;
+    [self setType:NMSSHChannelTypeExec];
+    
+    // Try executing command
+    rc = libssh2_channel_exec(self.channel, [command UTF8String]);
+    
+    if (rc != 0) {
+        if (error) {
+            [userInfo setObject:[[self.session lastError] localizedDescription] forKey:NSLocalizedDescriptionKey];
+            [userInfo setObject:[NSString stringWithFormat:@"%i", rc] forKey:NSLocalizedFailureReasonErrorKey];
+
+            error = [NSError errorWithDomain:@"NMSSH"
+                                         code:NMSSHChannelExecutionError
+                                     userInfo:userInfo];
+        }
+
+        NMSSHLogError(@"Error executing command");
+        [self closeChannel];
+        [[channelStream delegate] onError:error];
+        [[channelStream delegate] onExit:@1];
+        return;
+    }
+    
+    // Set non-blocking mode
+    libssh2_session_set_blocking(self.session.rawSession, 0);
+
+    for (;;) {
+        ssize_t rc;
+        ssize_t erc;
+        char buffer[self.bufferSize];
+        char errorBuffer[self.bufferSize];
+
+        do {
+            rc = libssh2_channel_read(self.channel, buffer, (ssize_t)sizeof(buffer));
+            
+            erc = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer));
+
+            if (rc > 0) {
+                [[channelStream delegate] onStdout:[[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding]];
+            }
+            
+            if (erc > 0) {
+                [[channelStream delegate] onStderr:[[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
+            }
+
+            int exitCode = libssh2_channel_get_exit_status(self.channel);
+            
+            // Store all errors that might occur
+            if (exitCode) {
+                if (error) {
+                
+                    [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
+                    [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
+
+                    error = [NSError errorWithDomain:@"NMSSH"
+                                                 code:NMSSHChannelExecutionError
+                                             userInfo:userInfo];
+                }
+            }
+
+            if (libssh2_channel_eof(self.channel) == 1 || rc == 0) {
+                while ((rc  = libssh2_channel_read(self.channel, buffer, (ssize_t)sizeof(buffer))) > 0) {
+                    [[channelStream delegate] onStdout:[[NSString alloc] initWithBytes:buffer length:rc encoding:NSUTF8StringEncoding]];
+                }
+                while ((erc  = libssh2_channel_read_stderr(self.channel, errorBuffer, (ssize_t)sizeof(errorBuffer))) > 0) {
+                    [[channelStream delegate] onStderr:[[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
+                }
+                
+                [self closeChannel];
+                
+                if (error) {
+                    [[channelStream delegate] onError:error];
+                }
+
+                [[channelStream delegate] onExit:[NSNumber numberWithInt:exitCode]];
+                return;
+            }
+
+        } while (rc > 0);
+
+        if (rc != LIBSSH2_ERROR_EAGAIN) {
+            break;
+        }
+
+        waitsocket(CFSocketGetNative([self.session socket]), self.session.rawSession);
+    }
+
+    // If we've got this far, it means fetching execution response failed
+    if (error) {
+        [userInfo setObject:[[self.session lastError] localizedDescription] forKey:NSLocalizedDescriptionKey];
+        error = [NSError errorWithDomain:@"NMSSH"
+                                     code:NMSSHChannelExecutionResponseError
+                                 userInfo:userInfo];
+        
+        [[channelStream delegate] onError:error];
+    }
+
+    NMSSHLogError(@"Error fetching response from command");
+    [self closeChannel];
+    
+    [[channelStream delegate] onExit:@1];
+}
+
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error {
     return [self execute:command error:error timeout:@0];
 }
