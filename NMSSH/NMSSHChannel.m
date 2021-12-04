@@ -50,6 +50,7 @@
 }
 
 - (BOOL)openChannel:(NSError *__autoreleasing *)error {
+    pthread_mutex_lock(&self->wrapperLock);
     if (self.channel != NULL) {
         NMSSHLogWarn(@"The channel will be closed before continue");
         if (self.type == NMSSHChannelTypeShell) {
@@ -60,13 +61,12 @@
         }
     }
 
-    pthread_mutex_lock(&self->wrapperLock);
+    
     // Set blocking mode
     libssh2_session_set_blocking(self.session.rawSession, 1);
 
     // Open up the channel
     LIBSSH2_CHANNEL *channel = libssh2_channel_open_session(self.session.rawSession);
-    pthread_mutex_unlock(&self->wrapperLock);
 
     if (channel == NULL){
         NMSSHLogError(@"Unable to open a session");
@@ -76,6 +76,7 @@
                                      userInfo:@{ NSLocalizedDescriptionKey : @"Channel allocation error" }];
         }
 
+        pthread_mutex_unlock(&self->wrapperLock);
         return NO;
     }
 
@@ -83,13 +84,11 @@
 
     // Try to set environment variables
     if (self.environmentVariables) {
-        pthread_mutex_lock(&self->wrapperLock);
         for (NSString *key in self.environmentVariables) {
             if ([key isKindOfClass:[NSString class]] && [[self.environmentVariables objectForKey:key] isKindOfClass:[NSString class]]) {
                 libssh2_channel_setenv(self.channel, [key UTF8String], [[self.environmentVariables objectForKey:key] UTF8String]);
             }
         }
-        pthread_mutex_unlock(&self->wrapperLock);
     }
 
     int rc = 0;
@@ -112,10 +111,13 @@
             NMSSHLogError(@"Error requesting pseudo terminal");
             [self closeChannel];
 
+            pthread_mutex_unlock(&self->wrapperLock);
             return NO;
         }
     }
 
+    pthread_mutex_unlock(&self->wrapperLock);
+    
     return YES;
 }
 
