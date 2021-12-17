@@ -193,7 +193,7 @@
     
     if (![self openChannel:&error]) {
         [[channelStream delegate] onError:error];
-        [[channelStream delegate] onExit:@1];
+        [[channelStream delegate] onExit:@1 exitSignal: NULL];
         return;
     }
 
@@ -216,11 +216,27 @@
                                          code:NMSSHChannelExecutionError
                                      userInfo:userInfo];
         }
+        
+        char* exitSignal;
+        size_t exitSignalLength;
+        NSString *exitSignalString;
+        
+        pthread_mutex_lock(&self.session->wrapperLock);
+        
+        int esc = libssh2_channel_get_exit_signal(self.channel, &exitSignal, &exitSignalLength, NULL, NULL, NULL, NULL);
+        
+        pthread_mutex_unlock(&self.session->wrapperLock);
+        
+        exitSignal[exitSignalLength] = 0;
+        
+        if (esc == 0 && exitSignalLength > 0) {
+            exitSignalString = [NSString stringWithFormat:@"%s", exitSignal];
+        }
 
         NMSSHLogError(@"Error executing command");
         [self closeChannel];
         [[channelStream delegate] onError:error];
-        [[channelStream delegate] onExit:@1];
+        [[channelStream delegate] onExit:@1 exitSignal:exitSignalString];
         return;
     }
     
@@ -287,13 +303,29 @@
                     [[channelStream delegate] onStderr:[[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
                 }
                 
+                char* exitSignal;
+                size_t exitSignalLength;
+                NSString *exitSignalString;
+                
+                pthread_mutex_lock(&self.session->wrapperLock);
+                
+                int esc = libssh2_channel_get_exit_signal(self.channel, &exitSignal, &exitSignalLength, NULL, NULL, NULL, NULL);
+                
+                pthread_mutex_unlock(&self.session->wrapperLock);
+                
+                exitSignal[exitSignalLength] = 0;
+                
+                if (esc == 0 && exitSignalLength > 0) {
+                    exitSignalString = [NSString stringWithFormat:@"%s", exitSignal];
+                }
+                
                 [self closeChannel];
                 
                 if (error) {
                     [[channelStream delegate] onError:error];
                 }
 
-                [[channelStream delegate] onExit:[NSNumber numberWithInt:exitCode]];
+                [[channelStream delegate] onExit:[NSNumber numberWithInt:exitCode] exitSignal:exitSignalString];
                 return;
             }
 
@@ -315,11 +347,27 @@
         
         [[channelStream delegate] onError:error];
     }
+    
+    char* exitSignal;
+    size_t exitSignalLength;
+    NSString *exitSignalString;
+    
+    pthread_mutex_lock(&self.session->wrapperLock);
+    
+    int esc = libssh2_channel_get_exit_signal(self.channel, &exitSignal, &exitSignalLength, NULL, NULL, NULL, NULL);
+    
+    pthread_mutex_unlock(&self.session->wrapperLock);
+    
+    exitSignal[exitSignalLength] = 0;
+    
+    if (esc == 0 && exitSignalLength > 0) {
+        exitSignalString = [NSString stringWithFormat:@"%s", exitSignal];
+    }
 
     NMSSHLogError(@"Error fetching response from command");
     [self closeChannel];
     
-    [[channelStream delegate] onExit:@1];
+    [[channelStream delegate] onExit:@1 exitSignal:exitSignalString];
 }
 
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error {
@@ -327,16 +375,43 @@
 }
 
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out {
-    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out timeout:@1];
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out timeout:@0];
 }
 
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out timeout:(NSNumber *)timeout {
+    NSNumber *exitCode;
+    NSString *exitSignal;
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:&exitCode exitSignal:&exitSignal timeout:timeout];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitSignal: (NSString * *)exitSignal timeout:(NSNumber *)timeout {
+    NSNumber *exitCode;
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:&exitCode exitSignal:exitSignal timeout:timeout];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitCode: (NSNumber **)exitCode timeout:(NSNumber *)timeout {
+    NSString *exitSignal;
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:exitCode exitSignal:&exitSignal timeout:timeout];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitSignal: (NSString * *)exitSignal {
+    NSNumber *exitCode;
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:&exitCode exitSignal:exitSignal timeout:@0];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitCode: (NSNumber **)exitCode {
+    NSString *exitSignal;
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:exitCode exitSignal:&exitSignal timeout:@0];
+}
+
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitCode: (NSNumber **)exitCode exitSignal: (NSString * *)exitSignal timeout:(NSNumber *)timeout {
     NMSSHLogInfo(@"Exec command %@", command);
 
     // In case of error...
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:command forKey:@"command"];
 
     if (![self openChannel:error]) {
+        *exitCode = [NSNumber numberWithInt:1];
         return nil;
     }
 
@@ -360,6 +435,8 @@
                                      userInfo:userInfo];
         }
 
+        *exitCode = [NSNumber numberWithInt:1];
+        
         NMSSHLogError(@"Error executing command");
         [self closeChannel];
         return nil;
@@ -397,17 +474,23 @@
                 [response_stderr appendFormat:@"%@", [[NSString alloc] initWithBytes:errorBuffer length:erc encoding:NSUTF8StringEncoding]];
             }
             
+            char* exitSignalChar;
+            size_t exitSignalLength;
+            
             pthread_mutex_lock(&self.session->wrapperLock);
-            int exitCode = libssh2_channel_get_exit_status(self.channel);
+            int exitCodeResponse = libssh2_channel_get_exit_status(self.channel);
+            int esc = libssh2_channel_get_exit_signal(self.channel, &exitSignalChar, &exitSignalLength, NULL, NULL, NULL, NULL);
             pthread_mutex_unlock(&self.session->wrapperLock);
             
+            exitSignalChar[exitSignalLength] = 0;
+            
             // Store all errors that might occur
-            if (exitCode) {
+            if (exitCodeResponse) {
                 if (error) {
                 
                     [userInfo setObject:[response_stderr copy] forKey:NSLocalizedDescriptionKey];
                     [userInfo setObject:[NSString stringWithFormat:@"%zi", erc] forKey:NSLocalizedFailureReasonErrorKey];
-                    [userInfo setObject:[NSString stringWithFormat:@"%d", exitCode] forKey:@"exit_code"];
+                    [userInfo setObject:[NSString stringWithFormat:@"%d", exitCodeResponse] forKey:@"exit_code"];
 
                     *error = [NSError errorWithDomain:@"NMSSH"
                                                  code:NMSSHChannelExecutionError
@@ -437,6 +520,12 @@
 
                 *stdout_out = [response copy];
                 *stderr_out = [response_stderr copy];
+                
+                if (esc == 0 && exitSignalLength > 0) {
+                    *exitSignal = [NSString stringWithFormat:@"%s", exitSignalChar];
+                }
+                
+                *exitCode = [NSNumber numberWithInt:exitCodeResponse];
                 
                 [self setLastResponse:[response copy]];
                 [self closeChannel];
@@ -474,6 +563,8 @@
                 *stdout_out = [response copy];
                 *stderr_out = [response_stderr copy];
                 
+                *exitCode = [NSNumber numberWithInt:exitCodeResponse];
+                
                 [self setLastResponse:[response copy]];
                 [self closeChannel];
 
@@ -495,6 +586,8 @@
                                      code:NMSSHChannelExecutionResponseError
                                  userInfo:userInfo];
     }
+    
+    *exitCode = [NSNumber numberWithInt:1];
 
     NMSSHLogError(@"Error fetching response from command");
     [self closeChannel];

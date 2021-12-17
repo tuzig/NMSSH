@@ -10,19 +10,19 @@
 
 @protocol NMSSHChannelStreamReceiveDelegate <NSObject>
 
--(void)onStdout: (NSString *)stringText;
+-(void)onStdout: (NSString * _Nonnull)stringText;
 
--(void)onStderr: (NSString *)stringText;
+-(void)onStderr: (NSString * _Nonnull)stringText;
 
--(void)onExit: (NSNumber *)exitCode;
+-(void)onExit: (NSNumber * _Nonnull)exitCode exitSignal:(NSString * _Nullable) exitSignal;
 
--(void)onError: (NSError *)error;
+-(void)onError: (NSError * _Nonnull)error;
 
 @end
 
 @interface NMSSHChannelStream : NSObject
 
-@property (nonatomic,strong) id <NMSSHChannelStreamReceiveDelegate>delegate;
+@property (nonatomic,strong) id <NMSSHChannelStreamReceiveDelegate> _Nullable delegate;
 
 @end
 

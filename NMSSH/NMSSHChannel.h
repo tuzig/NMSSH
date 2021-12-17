@@ -146,6 +146,107 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
 - (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out;
 
 /**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell script that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitCode Command exit code
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitCode: (NSNumber * _Nonnull * _Nonnull)exitCode;
+
+/**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell script that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitSignal Command exit signal
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitSignal: (NSString * _Nullable * _Nullable)exitSignal;
+
+/**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell ßcript that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitCode Command exit code
+ @param exitSignal Command exit signal
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitCode: (NSNumber * _Nonnull * _Nonnull)exitCode exitSignal: (NSString * _Nonnull * _Nonnull)exitSignal;
+
+/**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell script that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitCode Command exit code
+ @param timeout The time to wait (in seconds) before giving up on the request
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitCode: (NSNumber * _Nonnull * _Nonnull)exitCode timeout:(nonnull NSNumber *)timeout;
+
+/**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell script that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitSignal Command exit signal
+ @param timeout The time to wait (in seconds) before giving up on the request
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitSignal: (NSString * _Nullable * _Nullable)exitSignal timeout:(nonnull NSNumber *)timeout;
+
+/**
+ Execute a shell command on the server with a given timeout.
+
+ If an error occurs or the connection timed out, it will return `nil` and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param command Any shell script that is available on the server
+ @param error Error handler
+ @param stdout_out Stdout output
+ @param stderr_out Stderr output
+ @param exitCode Command exit code
+ @param exitSignal Command exit signal
+ @param timeout The time to wait (in seconds) before giving up on the request
+ @returns Shell command response
+ */
+- (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitCode: (NSNumber * _Nonnull * _Nonnull)exitCode exitSignal: (NSString * _Nullable * _Nullable)exitSignal timeout:(nonnull NSNumber *)timeout;
+
+/**
  Execute a shell command on the server and stream output.
 
  If an error occurs or the connection timed out, it will return `nil` and populate the error object.
