@@ -227,7 +227,7 @@
         
         pthread_mutex_unlock(&self.session->wrapperLock);
         
-        exitSignal[exitSignalLength] = 0;
+        if (exitSignal != NULL) exitSignal[exitSignalLength] = 0;
         
         if (esc == 0 && exitSignalLength > 0) {
             exitSignalString = [NSString stringWithFormat:@"%s", exitSignal];
@@ -313,7 +313,7 @@
                 
                 pthread_mutex_unlock(&self.session->wrapperLock);
                 
-                exitSignal[exitSignalLength] = 0;
+                if (exitSignal != NULL) exitSignal[exitSignalLength] = 0;
                 
                 if (esc == 0 && exitSignalLength > 0) {
                     exitSignalString = [NSString stringWithFormat:@"%s", exitSignal];
@@ -486,7 +486,7 @@
             int esc = libssh2_channel_get_exit_signal(self.channel, &exitSignalChar, &exitSignalLength, NULL, NULL, NULL, NULL);
             pthread_mutex_unlock(&self.session->wrapperLock);
             
-            exitSignalChar[exitSignalLength] = 0;
+            if (exitSignalChar != NULL) exitSignalChar[exitSignalLength] = 0;
             
             // Store all errors that might occur
             if (exitCodeResponse) {
