@@ -404,6 +404,10 @@
     return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:exitCode exitSignal:&exitSignal timeout:@0];
 }
 
+- (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitCode: (NSNumber **)exitCode exitSignal: (NSString * *)exitSignal {
+    return [self execute:command error:error stdout_out:stdout_out stderr_out:stderr_out exitCode:exitCode exitSignal:exitSignal timeout:@0];
+}
+
 - (NSString *)execute:(NSString *)command error:(NSError *__autoreleasing *)error stdout_out: (NSString **)stdout_out stderr_out: (NSString **)stderr_out exitCode: (NSNumber **)exitCode exitSignal: (NSString * *)exitSignal timeout:(NSNumber *)timeout {
     NMSSHLogInfo(@"Exec command %@", command);
 
