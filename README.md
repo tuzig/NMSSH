@@ -1,20 +1,20 @@
-# NMSSH [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# NMSSH-riden [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps libssh2.
 
 ## Questions & Issues
 
-If you encounter an issue or have any questions about implementing NMSSH, please post them in [the issue tracker](https://github.com/NMSSH/NMSSH/issues) – we do not offer free support via email.
+If you encounter an issue or have any questions about implementing NMSSH-riden, please post them in [the issue tracker](https://github.com/ridenui/NMSSH/issues) – we do not offer free support via email.
 
 ## Installation
 
 ### CocoaPods
 
-    pod 'NMSSH'
+    pod 'NMSSH-riden'
 
 ### Carthage
 
-    github "NMSSH/NMSSH"
+    github "ridenui/NMSSH-riden"
 
 ### Build from source
 
@@ -25,7 +25,7 @@ Consult the Wiki for detailed information about how to:
 
 ### Include it in your project
 
-Add `#import <NMSSH/NMSSH.h>` to your source file.
+Add `#import <NMSSH-riden/NMSSH.h>` to your source file.
 
 ### OpenSSL and Libssh2 binaries
 

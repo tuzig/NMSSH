@@ -18,4 +18,6 @@
 
 #import "NMSSHLogger.h"
 
+#import "NMSSHChannelStream.h"
+
 #endif

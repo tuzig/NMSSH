@@ -22,6 +22,7 @@
 
 @implementation NMSSHSession
 
+
 // -----------------------------------------------------------------------------
 #pragma mark - INITIALIZE A NEW SSH SESSION
 // -----------------------------------------------------------------------------
@@ -45,6 +46,7 @@
 
 - (instancetype)initWithHost:(NSString *)host port:(NSInteger)port andUsername:(NSString *)username {
     if ((self = [super init])) {
+        pthread_mutex_init(&self->wrapperLock, NULL);
         [self setHost:host];
         [self setPort:@(port)];
         [self setUsername:username];
@@ -107,6 +109,7 @@
     if (self.sessionToFree) {
         libssh2_session_free(self.sessionToFree);
     }
+    pthread_mutex_destroy(&self->wrapperLock);
 }
 
 // -----------------------------------------------------------------------------

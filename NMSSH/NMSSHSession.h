@@ -1,4 +1,5 @@
 #import "NMSSH.h"
+#import <pthread/pthread.h>
 
 @class NMSSHHostConfig, NMSFTP;
 @protocol NMSSHSessionDelegate;
@@ -42,7 +43,9 @@ typedef NS_ENUM(NSInteger, NMSSHKnownHostStatus) {
  If you want to use multiple NMSSHSession instances at once you should implement
  the [crypto mutex callbacks](http://trac.libssh2.org/wiki/MultiThreading).
  */
-@interface NMSSHSession : NSObject
+@interface NMSSHSession : NSObject {
+    @public pthread_mutex_t wrapperLock;
+}
 
 /// ----------------------------------------------------------------------------
 /// @name Setting the Delegate
