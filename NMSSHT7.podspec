@@ -1,8 +1,8 @@
 Pod::Spec.new do |spec|
-  spec.name         = "NMSSH-riden"
-  spec.version      = "2.7.2"
+  spec.name         = "NMSSHTuzig"
+  spec.version      = "2.7.2-improve-EOF-handling"
   spec.summary      = "NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps libssh2."
-  spec.homepage     = "https://github.com/ridenui/NMSSH"
+  spec.homepage     = "https://github.com/tuzig/NMSSH"
   spec.license      = 'MIT'
   spec.authors      = { "Christoffer Lejdborg" => "hello@9muses.se", "Tommaso Madonia" => "tommaso@madonia.me", "Nils Bergmann" => "nilsbergmann@noim.io" }
 

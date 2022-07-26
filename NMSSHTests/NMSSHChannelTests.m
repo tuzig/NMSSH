@@ -73,6 +73,51 @@
                          @"Execution returns the expected response");
 }
 
+- (void)testExitingAShell {
+    channel = [[NMSSHChannel alloc] initWithSession:session];
+
+    NSError *error = nil;
+    XCTAssertNoThrow([channel startShell:&error],
+                    @"Start shell should not throw an exception");
+
+    XCTAssertNoThrow([channel write:@"exit\n" error:&error],
+                     @"Writeshould not throw an exception");
+
+    [NSThread sleepForTimeInterval:0.1f];
+
+    XCTAssertEqual([channel type], NMSSHChannelTypeClosed,
+                          @"Channel is not closed");
+}
+- (void)testExitingTwoShells {
+    channel = [[NMSSHChannel alloc] initWithSession:session];
+
+    NMSSHChannel *channel2 = [[NMSSHChannel alloc] initWithSession:session];
+
+    NSError *error = nil;
+    XCTAssertNoThrow([channel startShell:&error],
+                    @"Start shell should not throw an exception");
+    error = nil;
+    XCTAssertNoThrow([channel2 startShell:&error],
+                    @"Start shell should not throw an exception");
+
+    XCTAssertNoThrow([channel write:@"exit\n" error:&error],
+                     @"Writeshould not throw an exception");
+
+    [NSThread sleepForTimeInterval:0.1f];
+
+    XCTAssertEqual([channel type], NMSSHChannelTypeClosed,
+                          @"Channel is not closed");
+
+    XCTAssertNoThrow([channel2 write:@"exit\n" error:&error],
+                     @"Writeshould not throw an exception");
+
+    [NSThread sleepForTimeInterval:0.1f];
+
+    XCTAssertEqual([channel2 type], NMSSHChannelTypeClosed,
+                          @"Channel is not closed");
+}
+
+
 // -----------------------------------------------------------------------------
 // SCP FILE TRANSFER TESTS
 // -----------------------------------------------------------------------------
