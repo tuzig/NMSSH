@@ -686,8 +686,11 @@
 #endif
                     [self setSource: nil];
                 }
-                [self closeChannel];
-                return;
+                pthread_mutex_lock(&self.session->wrapperLock);
+                libssh2_channel_free(self.channel);
+                [self setType:NMSSHChannelTypeClosed];
+                [self setChannel:NULL];
+                pthread_mutex_unlock(&self.session->wrapperLock);
             }
         }
     });
