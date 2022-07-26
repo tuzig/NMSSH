@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name         = "NMSSHTuzig"
+  spec.name         = "NMSSHT7"
   spec.version      = "2.7.2-improve-EOF-handling"
   spec.summary      = "NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps libssh2."
   spec.homepage     = "https://github.com/tuzig/NMSSH"

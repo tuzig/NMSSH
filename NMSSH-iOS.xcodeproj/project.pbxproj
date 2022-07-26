@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		18A0965D17D6A97C008B76FB /* NMSSH Framework */ = {
+		18A0965D17D6A97C008B76FB /* NMSSHT7 Framework */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 18A0965E17D6A97C008B76FB /* Build configuration list for PBXAggregateTarget "NMSSH Framework" */;
+			buildConfigurationList = 18A0965E17D6A97C008B76FB /* Build configuration list for PBXAggregateTarget "NMSSHT7 Framework" */;
 			buildPhases = (
 				18A0966117D6A992008B76FB /* Build Frameworks */,
 				18A0966217D6A994008B76FB /* Lipo Frameworks */,
 			);
 			dependencies = (
 			);
-			name = "NMSSH Framework";
+			name = "NMSSHT7 Framework";
 			productName = "NMSSH Framework";
 		};
 /* End PBXAggregateTarget section */
@@ -78,11 +78,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		186CC9581B69110500F674C4 /* NMSSH.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NMSSH.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		186CC9581B69110500F674C4 /* NMSSHT7.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NMSSHT7.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		186CC95B1B69110500F674C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		186CC9711B69117D00F674C4 /* NMSSH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NMSSH.h; path = "NMSSH-iOS/NMSSH.h"; sourceTree = SOURCE_ROOT; };
 		18A0963017D6A85F008B76FB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		18A0964F17D6A8C4008B76FB /* NMSSH Static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NMSSH Static.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		18A0964F17D6A8C4008B76FB /* NMSSHT7 Static.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NMSSHT7 Static.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18A0965817D6A8C4008B76FB /* NMSSH-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NMSSH-Prefix.pch"; sourceTree = "<group>"; };
 		18A0966517D6AA3D008B76FB /* socket_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket_helper.h; sourceTree = "<group>"; };
 		18A0966617D6AA3D008B76FB /* socket_helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = socket_helper.m; sourceTree = "<group>"; };
@@ -168,8 +168,8 @@
 		18A0962C17D6A85F008B76FB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				18A0964F17D6A8C4008B76FB /* NMSSH Static.framework */,
-				186CC9581B69110500F674C4 /* NMSSH.framework */,
+				18A0964F17D6A8C4008B76FB /* NMSSHT7 Static.framework */,
+				186CC9581B69110500F674C4 /* NMSSHT7.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -324,9 +324,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		186CC9571B69110500F674C4 /* NMSSH */ = {
+		186CC9571B69110500F674C4 /* NMSSHT7 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 186CC96B1B69110500F674C4 /* Build configuration list for PBXNativeTarget "NMSSH" */;
+			buildConfigurationList = 186CC96B1B69110500F674C4 /* Build configuration list for PBXNativeTarget "NMSSHT7" */;
 			buildPhases = (
 				186CC9531B69110500F674C4 /* Sources */,
 				186CC9541B69110500F674C4 /* Frameworks */,
@@ -337,14 +337,14 @@
 			);
 			dependencies = (
 			);
-			name = NMSSH;
+			name = NMSSHT7;
 			productName = NMSSH;
-			productReference = 186CC9581B69110500F674C4 /* NMSSH.framework */;
+			productReference = 186CC9581B69110500F674C4 /* NMSSHT7.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		18A0964E17D6A8C4008B76FB /* NMSSH Static */ = {
+		18A0964E17D6A8C4008B76FB /* NMSSHT7 Static */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 18A0965B17D6A8C4008B76FB /* Build configuration list for PBXNativeTarget "NMSSH Static" */;
+			buildConfigurationList = 18A0965B17D6A8C4008B76FB /* Build configuration list for PBXNativeTarget "NMSSHT7 Static" */;
 			buildPhases = (
 				18A0964B17D6A8C4008B76FB /* Sources */,
 				18A0964C17D6A8C4008B76FB /* Frameworks */,
@@ -355,9 +355,9 @@
 			);
 			dependencies = (
 			);
-			name = "NMSSH Static";
+			name = "NMSSHT7 Static";
 			productName = NMSSH;
-			productReference = 18A0964F17D6A8C4008B76FB /* NMSSH Static.framework */;
+			productReference = 18A0964F17D6A8C4008B76FB /* NMSSHT7 Static.framework */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -367,7 +367,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = NMSSH;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = "Nine Muses AB";
 				TargetAttributes = {
 					186CC9571B69110500F674C4 = {
@@ -388,9 +388,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				18A0964E17D6A8C4008B76FB /* NMSSH Static */,
-				18A0965D17D6A97C008B76FB /* NMSSH Framework */,
-				186CC9571B69110500F674C4 /* NMSSH */,
+				18A0964E17D6A8C4008B76FB /* NMSSHT7 Static */,
+				18A0965D17D6A97C008B76FB /* NMSSHT7 Framework */,
+				186CC9571B69110500F674C4 /* NMSSHT7 */,
 			);
 		};
 /* End PBXProject section */
@@ -505,7 +505,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = NMSSH/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -546,7 +546,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				INFOPLIST_FILE = NMSSH/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -580,6 +580,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -587,6 +588,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -604,7 +606,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -630,6 +632,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -637,6 +640,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -646,7 +650,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -722,7 +726,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		186CC96B1B69110500F674C4 /* Build configuration list for PBXNativeTarget "NMSSH" */ = {
+		186CC96B1B69110500F674C4 /* Build configuration list for PBXNativeTarget "NMSSHT7" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				186CC96C1B69110500F674C4 /* Debug */,
@@ -740,7 +744,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		18A0965B17D6A8C4008B76FB /* Build configuration list for PBXNativeTarget "NMSSH Static" */ = {
+		18A0965B17D6A8C4008B76FB /* Build configuration list for PBXNativeTarget "NMSSHT7 Static" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18A0965917D6A8C4008B76FB /* Debug */,
@@ -749,7 +753,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		18A0965E17D6A97C008B76FB /* Build configuration list for PBXAggregateTarget "NMSSH Framework" */ = {
+		18A0965E17D6A97C008B76FB /* Build configuration list for PBXAggregateTarget "NMSSHT7 Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18A0965F17D6A97C008B76FB /* Debug */,
