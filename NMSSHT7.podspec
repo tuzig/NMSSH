@@ -1,12 +1,12 @@
 Pod::Spec.new do |spec|
   spec.name         = "NMSSHT7"
-  spec.version      = "2.7.2-improve-EOF-handling"
+  spec.version      = "2.8-rc2"
   spec.summary      = "NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps libssh2."
-  spec.homepage     = "https://github.com/tuzig/NMSSH"
+  spec.homepage     = "https://github.com/tuzig/NMSSHT7"
   spec.license      = 'MIT'
-  spec.authors      = { "Christoffer Lejdborg" => "hello@9muses.se", "Tommaso Madonia" => "tommaso@madonia.me", "Nils Bergmann" => "nilsbergmann@noim.io" }
+  spec.authors      = { "Benny Daon" => "benny@9tuzig.com", "Tommaso Madonia" => "tommaso@madonia.me", "Nils Bergmann" => "nilsbergmann@noim.io" }
 
-  spec.source       = { :git => "https://github.com/ridenui/NMSSH.git", :tag => spec.version.to_s }
+  spec.source       = { :git => "https://github.com/tuzig/NMSSHT7.git", :tag => spec.version.to_s }
 
   spec.requires_arc = true
   spec.platform = :ios
@@ -18,7 +18,7 @@ Pod::Spec.new do |spec|
   spec.libraries    = 'z'
   spec.framework    = 'CFNetwork'
 
-  spec.ios.deployment_target  = '9.0'
+  spec.ios.deployment_target  = '13.0'
   spec.ios.vendored_libraries = 'NMSSH-iOS/Libraries/lib/libssh2.a', 'NMSSH-iOS/Libraries/lib/libssl.a', 'NMSSH-iOS/Libraries/lib/libcrypto.a'
   spec.ios.source_files       = 'NMSSH-iOS', 'NMSSH-iOS/Libraries/**/*.h'
   spec.ios.public_header_files  = 'NMSSH-iOS/Libraries/**/*.h'
