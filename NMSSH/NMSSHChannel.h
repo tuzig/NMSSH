@@ -1,5 +1,5 @@
-#import "NMSSH.h"
-#import "NMSSHChannelStream.h"
+#import <NMSSH.h>
+// #import "NMSSHChannelStream.h"
 #import <pthread/pthread.h>
 
 //#define pthread_mutex_lock(lock) NSLog(@"LOCK: %p", lock); pthread_mutex_lock(lock);
@@ -245,18 +245,6 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
  @returns Shell command response
  */
 - (nullable NSString *)execute:(nonnull NSString *)command error:(NSError * _Nullable * _Nullable)error stdout_out:(NSString * _Nullable * _Nullable)stdout_out stderr_out:(NSString * _Nullable * _Nullable)stderr_out exitCode: (NSNumber * _Nonnull * _Nonnull)exitCode exitSignal: (NSString * _Nullable * _Nullable)exitSignal timeout:(nonnull NSNumber *)timeout;
-
-/**
- Execute a shell command on the server and stream output.
-
- If an error occurs or the connection timed out, it will return `nil` and populate the error object.
- If requestPty is enabled request a pseudo terminal before running the
- command.
-
- @param command Any shell script that is available on the server
- @param channelStream Stream delegate
- */
-- (void)executeStream:(nonnull NSString *)command channelStream: (nonnull NMSSHChannelStream*)channelStream;
 
 /// ----------------------------------------------------------------------------
 /// @name Remote shell session
