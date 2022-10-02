@@ -4,17 +4,17 @@ NMSSH is a clean, easy-to-use, unit tested framework for iOS and OSX that wraps 
 
 ## Questions & Issues
 
-If you encounter an issue or have any questions about implementing NMSSH-riden, please post them in [the issue tracker](https://github.com/ridenui/NMSSH/issues) – we do not offer free support via email.
+If you encounter an issue or have any questions about implementing NMSSHT7, please post them in [the issue tracker](https://github.com/tuzig/NMSSH/issues) – we do not offer free support via email.
 
 ## Installation
 
 ### CocoaPods
 
-    pod 'NMSSH-riden'
+    pod 'NMSSHT7'
 
 ### Carthage
 
-    github "ridenui/NMSSH-riden"
+    github "tuzig/NMSSHT7"
 
 ### Build from source
 
@@ -25,7 +25,7 @@ Consult the Wiki for detailed information about how to:
 
 ### Include it in your project
 
-Add `#import <NMSSH-riden/NMSSH.h>` to your source file.
+Add `import NMSSHT7`
 
 ### OpenSSL and Libssh2 binaries
 

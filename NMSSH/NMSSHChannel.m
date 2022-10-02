@@ -677,14 +677,20 @@
                     [self.delegate channel:self didReadRawError:data];
                 }
             }
-            else {
-                pthread_mutex_lock(&self.session->wrapperLock);
-                int get = libssh2_channel_eof(self.channel);
-                pthread_mutex_unlock(&self.session->wrapperLock);
-                if (get == 1) {
-                    NMSSHLogVerbose(@"Host EOF received, closing channel...");
-                    [self closeShell];
+            else if (libssh2_channel_eof(self.channel) == 1) {
+                NMSSHLogVerbose(@"Host EOF received, closing channel...");
+                if (self.source) {
+                    dispatch_source_cancel(self.source);
+#if !(OS_OBJECT_USE_OBJC)
+                    dispatch_release(self.source);
+#endif
+                    [self setSource: nil];
                 }
+                pthread_mutex_lock(&self.session->wrapperLock);
+                libssh2_channel_free(self.channel);
+                [self setType:NMSSHChannelTypeClosed];
+                [self setChannel:NULL];
+                pthread_mutex_unlock(&self.session->wrapperLock);
             }
         }
     });

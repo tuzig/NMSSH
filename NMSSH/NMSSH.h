@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
-#ifndef _NMSSH_
-#define _NMSSH_
+#ifndef _NMSSHT7_
+#define _NMSSHT7_
 
 #import "libssh2.h"
 #import "libssh2_sftp.h"
