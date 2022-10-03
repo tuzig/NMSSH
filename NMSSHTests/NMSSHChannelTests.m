@@ -88,6 +88,21 @@
     XCTAssertEqual([channel type], NMSSHChannelTypeClosed,
                           @"Channel is not closed");
 }
+- (void)testExitingAUserSetShell {
+    channel = [[NMSSHChannel alloc] initWithSession:session];
+
+    NSError *error = nil;
+    XCTAssertNoThrow([channel startShell:&error command:@"/bin/sh"],
+                    @"Start shell should not throw an exception");
+    //TODO: would be ince to run echo $SHELL and verify
+    XCTAssertNoThrow([channel write:@"exit\n" error:&error],
+                     @"Writeshould not throw an exception");
+
+    [NSThread sleepForTimeInterval:0.1f];
+
+    XCTAssertEqual([channel type], NMSSHChannelTypeClosed,
+                          @"Channel is not closed");
+}
 - (void)testExitingTwoShells {
     channel = [[NMSSHChannel alloc] initWithSession:session];
 

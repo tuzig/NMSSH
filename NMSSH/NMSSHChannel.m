@@ -423,6 +423,9 @@
 // -----------------------------------------------------------------------------
 
 - (BOOL)startShell:(NSError *__autoreleasing *)error  {
+    return [self startCommand:error command:@"*"];
+}
+- (BOOL)startCommand:(NSError * _Nullable * _Nullable)error command:(NSString *)command {
     NMSSHLogInfo(@"Starting shell");
 
     if (![self openChannel:error]) {
@@ -523,7 +526,11 @@
     // Try opening the shell
     while (true) {
         pthread_mutex_lock(&self.session->wrapperLock);
-        rc = libssh2_channel_shell(self.channel);
+        if ([command isEqualToString:@"*"]) {
+            rc = libssh2_channel_shell(self.channel);
+        } else {
+            rc = libssh2_channel_exec(self.channel, [command UTF8String]);
+        }
         pthread_mutex_unlock(&self.session->wrapperLock);
         if (rc == LIBSSH2_ERROR_EAGAIN) {
             waitsocket(CFSocketGetNative([self.session socket]), [self.session rawSession]);

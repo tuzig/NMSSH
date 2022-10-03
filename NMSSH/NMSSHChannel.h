@@ -1,4 +1,4 @@
-#import <NMSSH.h>
+#import "NMSSH.h"
 // #import "NMSSHChannelStream.h"
 #import <pthread/pthread.h>
 
@@ -265,6 +265,17 @@ typedef NS_ENUM(NSInteger, NMSSHChannelType)  {
  */
 - (BOOL)startShell:(NSError * _Nullable * _Nullable)error;
 
+/**
+ Stream a remote command on the channel.
+
+ If an error occurs, it will return NO and populate the error object.
+ If requestPty is enabled request a pseudo terminal before running the
+ command.
+
+ @param error Error handler
+ @returns Shell initialization success
+ */
+- (BOOL)startCommand:(NSError * _Nullable * _Nullable)error command:(nonnull NSString *)command;
 /**
  Close a remote shell on an active channel.
  */
